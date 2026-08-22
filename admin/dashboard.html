@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<div class="admin-shell">
+  <aside class="admin-side">
+    <div style="font-family:var(--font-display); font-weight:600; font-size:1.1rem; margin-bottom:24px;">Turtle Watch Admin</div>
+    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="reports.html">Reports</a>
+    <a href="content.html">Site Content</a>
+    <a href="#" id="logout-link" style="margin-top:24px; color:#E3B79A;">Log Out</a>
+  </aside>
+  <main class="admin-main">
+    <h1>Dashboard</h1>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num" id="stat-total">—</div><div class="lbl">Total submissions</div></div>
+      <div class="stat-card"><div class="num" id="stat-pending">—</div><div class="lbl">Pending review</div></div>
+      <div class="stat-card"><div class="num" id="stat-approved">—</div><div class="lbl">Approved</div></div>
+      <div class="stat-card"><div class="num" id="stat-rejected">—</div><div class="lbl">Rejected</div></div>
+    </div>
+
+    <h2>Progress toward 100-report goal</h2>
+    <p><span id="stat-progress-num">—</span> / 100 approved reports</p>
+
+    <h2>Recent submissions</h2>
+    <table class="reports-table" id="recent-table">
+      <thead><tr><th>Submitted</th><th>Status</th><th>Habitat</th><th>Condition</th></tr></thead>
+      <tbody><tr><td colspan="4">Loading...</td></tr></tbody>
+    </table>
+  </main>
+</div>
+
+<script type="module" src="js/admin-dashboard.js"></script>
+</body>
+</html>
