@@ -1,0 +1,345 @@
+/* ============================================================
+   Design tokens
+   Palette grounded in the project's own subject: pond/creek
+   green, sun-baked clay road color, and a "crossing sign"
+   gold pulled from actual turtle-crossing road signage —
+   the visual identity a community project about turtles
+   and roads should have, not a generic eco-site look.
+   ============================================================ */
+:root {
+  --color-bg: #F1EFE3;
+  --color-bg-panel: #FFFFFF;
+  --color-ink: #20291F;
+  --color-ink-soft: #4B5A47;
+  --color-forest: #2C4A38;
+  --color-forest-dark: #1D3226;
+  --color-moss: #6E8F6F;
+  --color-clay: #9C6B3F;
+  --color-sign: #E3A72E;
+  --color-sign-dark: #B8841E;
+  --color-line: #DBD5C2;
+  --color-danger: #A1442B;
+  --color-ok: #3C6E4A;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --radius: 10px;
+  --max-width: 960px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--color-forest-dark);
+  line-height: 1.15;
+  margin: 0 0 0.5em;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 600; }
+h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 600; }
+h3 { font-size: 1.2rem; font-weight: 600; }
+
+p { margin: 0 0 1em; color: var(--color-ink-soft); }
+
+a { color: var(--color-forest); }
+
+.wrap {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------- Header / nav ---------- */
+header.site-header {
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-bg-panel);
+}
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+.brand {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--color-forest-dark);
+  text-decoration: none;
+}
+.nav-links { display: flex; gap: 24px; }
+.nav-links a {
+  text-decoration: none;
+  color: var(--color-ink-soft);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+.nav-links a:hover { color: var(--color-forest); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: var(--radius);
+  padding: 14px 26px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-primary { background: var(--color-forest); color: #fff; }
+.btn-primary:hover { background: var(--color-forest-dark); }
+.btn-secondary { background: transparent; color: var(--color-forest); border: 1.5px solid var(--color-forest); }
+.btn-danger { background: var(--color-danger); color: #fff; }
+.btn-ok { background: var(--color-ok); color: #fff; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------- Hero ---------- */
+.hero {
+  padding: 72px 0 56px;
+}
+.hero .eyebrow {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  color: var(--color-clay);
+  margin-bottom: 14px;
+  display: block;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+@media (max-width: 760px) {
+  .hero-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Crossing-sign counter (signature element) ----------
+   Shaped like a diamond road-warning sign, the same family of
+   sign that marks a turtle crossing — ties the progress counter
+   directly to the subject of the research instead of being a
+   generic stat card. */
+.sign {
+  width: 220px;
+  height: 220px;
+  margin: 0 auto;
+  background: var(--color-sign);
+  border: 5px solid var(--color-forest-dark);
+  transform: rotate(45deg);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(29, 50, 38, 0.18);
+}
+.sign-inner {
+  transform: rotate(-45deg);
+  text-align: center;
+}
+.sign-inner .count {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 2.1rem;
+  color: var(--color-forest-dark);
+  display: block;
+}
+.sign-inner .goal {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--color-forest-dark);
+  opacity: 0.75;
+}
+.sign-inner .label {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-forest-dark);
+  margin-top: 4px;
+  display: block;
+}
+
+/* ---------- Sections ---------- */
+section.block { padding: 56px 0; }
+section.block.alt { background: var(--color-bg-panel); border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); }
+.cols-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+@media (max-width: 760px) { .cols-3 { grid-template-columns: 1fr; } }
+.card {
+  background: var(--color-bg-panel);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* ---------- Forms ---------- */
+.field { margin-bottom: 22px; }
+.field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--color-forest-dark);
+}
+.field .hint { font-size: 0.85rem; color: var(--color-ink-soft); margin-top: 4px; }
+.field input[type="text"],
+.field input[type="date"],
+.field input[type="number"],
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1.5px solid var(--color-line);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  background: #fff;
+  color: var(--color-ink);
+}
+.field textarea { min-height: 100px; resize: vertical; }
+.radio-row { display: flex; gap: 16px; }
+.radio-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  border: 1.5px solid var(--color-line);
+  border-radius: 8px;
+  padding: 12px 18px;
+  cursor: pointer;
+  flex: 1;
+}
+.radio-row input { width: 18px; height: 18px; }
+.checkbox-row { display: flex; align-items: flex-start; gap: 10px; }
+.checkbox-row input { margin-top: 4px; width: 18px; height: 18px; }
+.optional-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-clay);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-left: 8px;
+  font-weight: 500;
+}
+fieldset { border: none; padding: 0; margin: 0 0 32px; }
+legend {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--color-forest-dark);
+  padding: 0;
+  margin-bottom: 6px;
+}
+.hidden { display: none !important; }
+
+/* ---------- Status pills ---------- */
+.pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+.pill-pending { background: #F3E4C4; color: #8A5A12; }
+.pill-approved { background: #DCEBDD; color: var(--color-ok); }
+.pill-rejected { background: #F2DAD3; color: var(--color-danger); }
+
+/* ---------- Admin ---------- */
+.admin-shell { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+.admin-side {
+  background: var(--color-forest-dark);
+  color: #EDE9DA;
+  padding: 24px 18px;
+}
+.admin-side a {
+  display: block;
+  color: #C9D6C6;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+.admin-side a:hover, .admin-side a.active { background: rgba(255,255,255,0.08); color: #fff; }
+.admin-main { padding: 32px; background: var(--color-bg); }
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+@media (max-width: 760px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+.stat-card {
+  background: var(--color-bg-panel);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+.stat-card .num { font-family: var(--font-mono); font-size: 1.8rem; font-weight: 700; color: var(--color-forest-dark); }
+.stat-card .lbl { font-size: 0.8rem; color: var(--color-ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+
+table.reports-table { width: 100%; border-collapse: collapse; background: var(--color-bg-panel); border-radius: var(--radius); overflow: hidden; }
+table.reports-table th, table.reports-table td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-line);
+  font-size: 0.92rem;
+}
+table.reports-table th { font-family: var(--font-mono); text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.04em; color: var(--color-ink-soft); }
+table.reports-table tr:last-child td { border-bottom: none; }
+table.reports-table tr { cursor: pointer; }
+table.reports-table tr:hover { background: #FAF8F0; }
+
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.tabs button {
+  background: transparent;
+  border: 1.5px solid var(--color-line);
+  border-radius: 100px;
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--color-ink-soft);
+}
+.tabs button.active { background: var(--color-forest); border-color: var(--color-forest); color: #fff; }
+
+.detail-panel {
+  background: var(--color-bg-panel);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: 20px;
+}
+.detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--color-line); font-size: 0.95rem; }
+.detail-row:last-child { border-bottom: none; }
+.detail-row .k { color: var(--color-ink-soft); font-weight: 500; }
+.detail-row .v { font-weight: 600; text-align: right; }
+.action-row { display: flex; gap: 10px; margin-top: 20px; }
+
+.login-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--color-forest-dark); }
+.login-card { background: var(--color-bg-panel); border-radius: var(--radius); padding: 40px; width: 100%; max-width: 380px; }
+
+.msg { padding: 12px 14px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 16px; }
+.msg-error { background: #F2DAD3; color: var(--color-danger); }
+.msg-ok { background: #DCEBDD; color: var(--color-ok); }
+
+footer.site-footer {
+  border-top: 1px solid var(--color-line);
+  padding: 32px 0;
+  margin-top: 40px;
+  font-size: 0.85rem;
+  color: var(--color-ink-soft);
+}
