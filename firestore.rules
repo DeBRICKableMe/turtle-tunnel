@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------------------------------------------------
+    // reports/{reportId}
+    // Public fields only: location, date, condition, habitat,
+    // status, and review metadata. No names or ages live here.
+    // ---------------------------------------------------------
+    match /reports/{reportId} {
+      // Anyone can submit a new report (the public form).
+      allow create: if true;
+
+      // Anyone can read a report ONLY if it's already approved.
+      // Signed-in admins can read any report, any status,
+      // for the review queue.
+      allow read: if resource.data.status == 'approved'
+                  || request.auth != null;
+
+      // Only signed-in admins can approve/reject/correct a
+      // report. The public can never edit or delete once
+      // submitted.
+      allow update, delete: if request.auth != null;
+
+      // ---------------------------------------------------------
+      // reports/{reportId}/private/consent
+      // First name, age range, and presentation consent.
+      // NEVER publicly readable, regardless of report status —
+      // this is what keeps names off the public map/findings
+      // even by accident.
+      // ---------------------------------------------------------
+      match /private/{docId} {
+        allow create: if true; // written alongside the report at submit time
+        allow read, update, delete: if request.auth != null;
+      }
+    }
+
+    // ---------------------------------------------------------
+    // content/{docId}
+    // Editable public-site copy. Anyone can read it (it's just
+    // website text), only admins can write it.
+    // ---------------------------------------------------------
+    match /content/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}

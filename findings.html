@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Findings — Licking County Turtle Watch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="brand" href="index.html">Licking County Turtle Watch</a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="report.html">Report a Turtle</a>
+      <a href="findings.html">Findings</a>
+    </nav>
+  </div>
+</header>
+
+<section class="block">
+  <div class="wrap">
+    <h1>What we're learning so far</h1>
+    <p id="content-findings-intro">These numbers reflect only the reports our team has reviewed and approved. As more community reports come in, this picture will keep filling in. We're not drawing conclusions yet — we're still collecting data.</p>
+
+    <div class="stat-grid" id="stat-grid">
+      <div class="stat-card"><div class="num" id="stat-total">—</div><div class="lbl">Approved reports</div></div>
+      <div class="stat-card"><div class="num" id="stat-road">—</div><div class="lbl">Near a road</div></div>
+      <div class="stat-card"><div class="num" id="stat-live">—</div><div class="lbl">Alive when seen</div></div>
+      <div class="stat-card"><div class="num" id="stat-progress">—</div><div class="lbl">Of 100-report goal</div></div>
+    </div>
+
+    <h2>Habitat breakdown</h2>
+    <div id="habitat-breakdown"><p>Loading...</p></div>
+
+    <h2>Condition breakdown</h2>
+    <div id="condition-breakdown"><p>Loading...</p></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    Only approved, reviewed reports are reflected here. We never publish names or contact information.
+  </div>
+</footer>
+
+<script type="module" src="js/findings.js"></script>
+</body>
+</html>
