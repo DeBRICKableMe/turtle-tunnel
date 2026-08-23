@@ -24,7 +24,7 @@
 <section class="block">
   <div class="wrap" style="max-width: 640px;">
     <h1>Report a Turtle</h1>
-    <p>Thanks for helping with our local research. This takes about a minute. Every field after the first question is optional — tell us as much or as little as you're comfortable with.</p>
+    <p>Thanks for helping with our local research. This takes about a minute. The questions about the sighting itself are required so we can use your report; the "About you" section at the end is completely optional.</p>
 
     <div id="form-msg"></div>
 
@@ -47,27 +47,27 @@
       <div id="rest-of-form" class="hidden">
 
         <fieldset>
-          <legend>Where did you see the turtle? <span class="optional-tag">Optional</span></legend>
+          <legend>Where did you see the turtle?</legend>
           <div class="field">
             <label for="location">Location description</label>
-            <input type="text" id="location" name="location" placeholder="e.g. Blackhand Gorge trail near the creek crossing" />
+            <input type="text" id="location" name="location" placeholder="e.g. Blackhand Gorge trail near the creek crossing" required />
             <div class="hint">A street, trail, landmark, or general area is perfect — it doesn't need to be exact.</div>
           </div>
         </fieldset>
 
         <fieldset>
-          <legend>When did you see it? <span class="optional-tag">Optional</span></legend>
+          <legend>When did you see it?</legend>
           <div class="field">
             <label for="observedDate">Date</label>
-            <input type="date" id="observedDate" name="observedDate" />
+            <input type="date" id="observedDate" name="observedDate" required />
           </div>
         </fieldset>
 
         <fieldset>
-          <legend>What was the turtle's condition? <span class="optional-tag">Optional</span></legend>
+          <legend>What was the turtle's condition?</legend>
           <div class="field">
             <label for="condition">Condition</label>
-            <select id="condition" name="condition">
+            <select id="condition" name="condition" required>
               <option value="">Select one...</option>
               <option value="alive_moving">Alive and moving</option>
               <option value="alive_injured">Alive but injured</option>
@@ -78,10 +78,10 @@
         </fieldset>
 
         <fieldset>
-          <legend>What habitat or environment was it in? <span class="optional-tag">Optional</span></legend>
+          <legend>What habitat or environment was it in?</legend>
           <div class="field">
             <label for="habitat">Habitat / environment</label>
-            <select id="habitat" name="habitat">
+            <select id="habitat" name="habitat" required>
               <option value="">Select one...</option>
               <option value="road">Road</option>
               <option value="next_to_road">Next to road</option>
@@ -133,6 +133,7 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script type="module" src="js/report-form.js"></script>
 </body>
 </html>
