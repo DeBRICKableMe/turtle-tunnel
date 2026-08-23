@@ -1,7 +1,7 @@
 import { db } from "../../js/firebase-app.js";
 import { requireAuth, wireLogout } from "./admin-guard.js";
 import {
-  collection, query, where, orderBy, getDocs, doc, getDoc, updateDoc, serverTimestamp
+  collection, query, where, orderBy, getDocs, doc, getDoc, updateDoc, deleteDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const user = await requireAuth();
@@ -117,6 +117,7 @@ async function openDetail(id) {
         <button class="btn btn-ok" id="btn-approve">Approve</button>
         <button class="btn btn-danger" id="btn-reject">Reject</button>
         <button class="btn btn-secondary" id="btn-save">Save Corrections</button>
+        <button class="btn btn-danger" id="btn-delete" style="margin-left:auto; background:transparent; color:var(--color-danger); border:1.5px solid var(--color-danger);">Delete Report</button>
       </div>
       <p class="hint" style="margin-top:14px;">The original submitted values are always kept, even if you correct a field here.</p>
     </div>
@@ -125,6 +126,23 @@ async function openDetail(id) {
   document.getElementById("btn-approve").addEventListener("click", () => setStatus(id, "approved"));
   document.getElementById("btn-reject").addEventListener("click", () => setStatus(id, "rejected"));
   document.getElementById("btn-save").addEventListener("click", () => saveCorrections(id, r));
+  document.getElementById("btn-delete").addEventListener("click", () => deleteReport(id));
+}
+
+async function deleteReport(id) {
+  const confirmed = window.confirm(
+    "Delete this report permanently? This cannot be undone, and it will also remove any progress it counted toward the 100-report goal if it was approved."
+  );
+  if (!confirmed) return;
+
+  // Firestore doesn't cascade-delete subcollections, so the
+  // private consent doc has to be removed explicitly or it's
+  // left behind as an orphan nobody can see or clean up.
+  await deleteDoc(doc(db, "reports", id, "private", "consent")).catch(() => {});
+  await deleteDoc(doc(db, "reports", id));
+
+  await loadReports(currentStatus);
+  detailPanel.innerHTML = `<div class="msg msg-ok">Report deleted.</div>`;
 }
 
 function escapeHtml(str) {
