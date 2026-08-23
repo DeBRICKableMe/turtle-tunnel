@@ -1,7 +1,11 @@
 import { db } from "./firebase-app.js";
+import { EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY } from "./firebase-config.js";
 import {
   collection, doc, serverTimestamp, writeBatch
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// emailjs is loaded globally via the <script> tag in report.html
+emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
 const form = document.getElementById("report-form");
 const restOfForm = document.getElementById("rest-of-form");
@@ -73,6 +77,22 @@ form.addEventListener("submit", async (e) => {
     batch.set(reportRef, { ...publicFields, originalSubmission });
     batch.set(privateRef, privateFields);
     await batch.commit();
+
+    // Notify the team a report is waiting for review. This is a
+    // nice-to-have on top of the actual submission — if the email
+    // fails for any reason, the report is already safely saved,
+    // so we just log the error and move on rather than showing
+    // the visitor a failure.
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        location: publicFields.location || "Not provided",
+        observed_date: publicFields.observedDate || "Not provided",
+        condition: publicFields.condition || "Not provided",
+        habitat: publicFields.habitat || "Not provided",
+      });
+    } catch (emailErr) {
+      console.warn("Report saved, but notification email failed to send:", emailErr);
+    }
 
     form.reset();
     restOfForm.classList.add("hidden");
