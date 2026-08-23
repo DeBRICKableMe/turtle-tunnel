@@ -9,3 +9,7 @@ export const firebaseConfig = {
 
 export const REPORT_GOAL = 100;
 export const ADMIN_EMAIL_DOMAIN = "turtlewatch-admin.local";
+
+export const EMAILJS_SERVICE_ID = "service_5582k0s";
+export const EMAILJS_TEMPLATE_ID = "template_nqctw9d";
+export const EMAILJS_PUBLIC_KEY = "5w5DxScX0_fqLI8rr";
