@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Findings — Licking County Turtle Watch</title>
+<title>Report a Turtle — Licking County Turtle Watch</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css" />
@@ -22,31 +22,135 @@
 </header>
 
 <section class="block">
-  <div class="wrap">
-    <h1>What we're learning so far</h1>
-    <p id="content-findings-intro">These numbers reflect only the reports our team has reviewed and approved. As more community reports come in, this picture will keep filling in. We're not drawing conclusions yet — we're still collecting data.</p>
+  <div class="wrap" style="max-width: 640px;">
+    <h1>Report a Turtle</h1>
+    <p>Thanks for helping with our local research. This takes about a minute. The questions about the sighting itself are required so we can use your report; the "About you" section at the end is completely optional.</p>
 
-    <div class="stat-grid" id="stat-grid">
-      <div class="stat-card"><div class="num" id="stat-total">—</div><div class="lbl">Approved reports</div></div>
-      <div class="stat-card"><div class="num" id="stat-road">—</div><div class="lbl">Seen crossing the road</div></div>
-      <div class="stat-card"><div class="num" id="stat-live">—</div><div class="lbl">Alive when seen</div></div>
-      <div class="stat-card"><div class="num" id="stat-progress">—</div><div class="lbl">Of 100-report goal</div></div>
-    </div>
+    <div id="form-msg"></div>
 
-    <h2>Where on the road</h2>
-    <div id="habitat-breakdown"><p>Loading...</p></div>
+    <form id="report-form">
 
-    <h2>Condition breakdown</h2>
-    <div id="condition-breakdown"><p>Loading...</p></div>
+      <fieldset>
+        <legend>Have you seen a turtle on the road in the Licking County area in the last 18 months?</legend>
+        <div class="radio-row">
+          <label><input type="radio" name="seenTurtle" value="yes" required /> Yes</label>
+          <label><input type="radio" name="seenTurtle" value="no" required /> No</label>
+        </div>
+      </fieldset>
+
+      <div id="no-branch" class="hidden">
+
+        <fieldset>
+          <legend>Have you seen any other small animals on or near the road in Licking County?</legend>
+          <div class="radio-row">
+            <label><input type="radio" name="otherAnimals" value="yes" /> Yes</label>
+            <label><input type="radio" name="otherAnimals" value="no" /> No</label>
+          </div>
+        </fieldset>
+
+        <div id="no-animals-thankyou" class="hidden">
+          <div class="card">
+            <p><strong>Thank you for your time!</strong> We appreciate you checking. If you spot a turtle on the road in the future, we'd love to hear about it.</p>
+          </div>
+        </div>
+
+        <div id="other-animals-detail" class="hidden">
+          <div class="field">
+            <label for="otherAnimalsDescription">What animal(s) did you see?</label>
+            <input type="text" id="otherAnimalsDescription" name="otherAnimalsDescription" placeholder="e.g. raccoon, opossum, groundhog" />
+          </div>
+          <button type="button" class="btn btn-primary" id="submit-btn-other">Submit</button>
+        </div>
+      </div>
+
+      <div id="rest-of-form" class="hidden">
+
+        <fieldset>
+          <legend>Where on the road did you see it?</legend>
+          <div class="field">
+            <label for="roadPosition">Position</label>
+            <select id="roadPosition" name="roadPosition" required>
+              <option value="">Select one...</option>
+              <option value="crossing">Crossing the road</option>
+              <option value="shoulder">On the shoulder / edge</option>
+              <option value="ditch">In a ditch beside the road</option>
+              <option value="median">On the median</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Where did you see the turtle?</legend>
+          <div class="field">
+            <label for="location">Location description</label>
+            <input type="text" id="location" name="location" placeholder="e.g. Rt. 16 near the Blackhand Gorge trailhead" required />
+            <div class="hint">A street, intersection, or landmark is perfect — it doesn't need to be exact.</div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>When did you see it?</legend>
+          <div class="field">
+            <label for="observedDate">Date</label>
+            <input type="date" id="observedDate" name="observedDate" required />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>What was the turtle's condition?</legend>
+          <div class="field">
+            <label for="condition">Condition</label>
+            <select id="condition" name="condition" required>
+              <option value="">Select one...</option>
+              <option value="alive_moving">Alive and moving</option>
+              <option value="alive_injured">Alive but injured</option>
+              <option value="dead">Dead</option>
+              <option value="unsure">Unsure</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>About you <span class="optional-tag">Optional</span></legend>
+          <p class="hint" style="margin-top:-10px;">Only our student team ever sees this. It's never shown publicly.</p>
+
+          <div class="field">
+            <label for="firstName">First name</label>
+            <input type="text" id="firstName" name="firstName" />
+          </div>
+
+          <div class="field">
+            <label for="ageRange">Age range</label>
+            <select id="ageRange" name="ageRange">
+              <option value="">Prefer not to say</option>
+              <option value="under_18">Under 18</option>
+              <option value="18_34">18–34</option>
+              <option value="35_54">35–54</option>
+              <option value="55_plus">55+</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="checkbox-row">
+              <input type="checkbox" id="nameUseApproved" name="nameUseApproved" />
+              <label for="nameUseApproved" style="margin:0; font-weight:500;">I give the team permission to use my first name in a presentation about this project.</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="btn btn-primary" id="submit-btn">Submit Report</button>
+      </div>
+    </form>
   </div>
 </section>
 
 <footer class="site-footer">
   <div class="wrap">
-    Only approved, reviewed reports are reflected here. We never publish names or contact information.
+    Reports are reviewed by our student team before they're counted or shown in any findings. We never publish names or contact information.
   </div>
 </footer>
 
-<script type="module" src="js/findings.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="module" src="js/report-form.js"></script>
 </body>
 </html>
