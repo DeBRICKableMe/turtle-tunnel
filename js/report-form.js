@@ -17,6 +17,24 @@ document.querySelectorAll(".step-panel").forEach((el) => {
 const otherAnimalsDetail = document.getElementById("other-animals-detail");
 const submitBtn = document.getElementById("submit-btn");
 
+// Fields that are only meaningful (and only required) while the
+// "turtle" step is the active step. We toggle `required` on/off
+// explicitly as steps change rather than relying on the browser
+// to exempt hidden (display:none) required fields — that exemption
+// isn't reliably honored in every browser, which was causing Next
+// to silently fail with "invalid form control ... not focusable"
+// console errors and no visible feedback.
+const turtleFields = ["roadPosition", "location", "observedDate", "condition"].map(
+  (id) => document.getElementById(id)
+);
+
+function setTurtleFieldsRequired(isRequired) {
+  turtleFields.forEach((el) => {
+    if (isRequired) el.setAttribute("required", "");
+    else el.removeAttribute("required");
+  });
+}
+
 // --- Step navigation -------------------------------------------------
 // Steps: gate -> [turtle ->] animals -> [about -> submit] | thankyou-no
 // A simple history stack powers the Back buttons.
@@ -29,6 +47,7 @@ function currentStep() {
 function goTo(step) {
   Object.values(panels).forEach((p) => p.classList.add("hidden"));
   panels[step].classList.remove("hidden");
+  setTurtleFieldsRequired(step === "turtle");
   history.push(step);
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -47,9 +66,9 @@ function clearMsg() {
   msgEl.innerHTML = "";
 }
 
-// Only currently-visible required fields are considered by
-// reportValidity() — fields inside a display:none step-panel are
-// automatically exempt, so this only validates the active step.
+// Validates whatever required fields are currently active/visible
+// (the gate step's radios, or the turtle step's fields once
+// setTurtleFieldsRequired has turned their `required` on).
 function currentStepValid() {
   return form.reportValidity();
 }
