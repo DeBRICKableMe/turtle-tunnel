@@ -24,46 +24,30 @@
 <section class="block">
   <div class="wrap" style="max-width: 640px;">
     <h1>Report a Turtle</h1>
-    <p>Thanks for helping with our local research. This takes about a minute. The questions about the sighting itself are required so we can use your report; the "About you" section at the end is completely optional.</p>
+    <p>Thanks for helping with our local research. A few short steps — the turtle sighting questions are required so we can use your report; everything else is optional.</p>
 
     <div id="form-msg"></div>
 
-    <form id="report-form">
+    <form id="report-form" novalidate>
 
-      <fieldset>
-        <legend>Have you seen a turtle on the road in the Licking County area in the last 18 months?</legend>
-        <div class="radio-row">
-          <label><input type="radio" name="seenTurtle" value="yes" required /> Yes</label>
-          <label><input type="radio" name="seenTurtle" value="no" required /> No</label>
-        </div>
-      </fieldset>
-
-      <div id="no-branch" class="hidden">
-
-        <fieldset>
-          <legend>Have you seen any other small animals on or near the road in Licking County?</legend>
+      <!-- STEP: gate -->
+      <div class="step-panel" data-step="gate">
+        <div class="step-progress">Step 1</div>
+        <fieldset style="margin-bottom:0;">
+          <legend>Have you seen a turtle on the road in the Licking County area in the last 18 months?</legend>
           <div class="radio-row">
-            <label><input type="radio" name="otherAnimals" value="yes" /> Yes</label>
-            <label><input type="radio" name="otherAnimals" value="no" /> No</label>
+            <label><input type="radio" name="seenTurtle" value="yes" required /> Yes</label>
+            <label><input type="radio" name="seenTurtle" value="no" required /> No</label>
           </div>
         </fieldset>
-
-        <div id="no-animals-thankyou" class="hidden">
-          <div class="card">
-            <p><strong>Thank you for your time!</strong> We appreciate you checking. If you spot a turtle on the road in the future, we'd love to hear about it.</p>
-          </div>
-        </div>
-
-        <div id="other-animals-detail" class="hidden">
-          <div class="field">
-            <label for="otherAnimalsDescription">What animal(s) did you see?</label>
-            <input type="text" id="otherAnimalsDescription" name="otherAnimalsDescription" placeholder="e.g. raccoon, opossum, groundhog" />
-          </div>
-          <button type="button" class="btn btn-primary" id="submit-btn-other">Submit</button>
+        <div class="step-actions" style="justify-content:flex-end;">
+          <button type="button" class="btn btn-primary" data-action="next-from-gate">Next</button>
         </div>
       </div>
 
-      <div id="rest-of-form" class="hidden">
+      <!-- STEP: turtle details (only if seenTurtle = yes) -->
+      <div class="step-panel hidden" data-step="turtle">
+        <div class="step-progress">Turtle Details</div>
 
         <fieldset>
           <legend>Where on the road did you see it?</legend>
@@ -96,13 +80,13 @@
           </div>
         </fieldset>
 
-        <fieldset>
+        <fieldset style="margin-bottom:0;">
           <legend>What was the turtle's condition?</legend>
-          <div class="field">
+          <div class="field" style="margin-bottom:0;">
             <label for="condition">Condition</label>
             <select id="condition" name="condition" required>
               <option value="">Select one...</option>
-              <option value="alive_moving">Alive</option>
+              <option value="alive_moving">Alive and moving</option>
               <option value="alive_injured">Alive but injured</option>
               <option value="dead">Dead</option>
               <option value="unsure">Unsure</option>
@@ -110,36 +94,85 @@
           </div>
         </fieldset>
 
+        <div class="step-actions">
+          <button type="button" class="btn btn-secondary" data-action="back">Back</button>
+          <button type="button" class="btn btn-primary" data-action="next-from-turtle">Next</button>
+        </div>
+      </div>
+
+      <!-- STEP: other animals (always reachable, both paths) -->
+      <div class="step-panel hidden" data-step="animals">
+        <div class="step-progress">Other Sightings</div>
         <fieldset>
-          <legend>About you <span class="optional-tag">Optional</span></legend>
-          <p class="hint" style="margin-top:-10px;">Only our student team ever sees this. It's never shown publicly.</p>
-
-          <div class="field">
-            <label for="firstName">First name</label>
-            <input type="text" id="firstName" name="firstName" />
-          </div>
-
-          <div class="field">
-            <label for="ageRange">Age range</label>
-            <select id="ageRange" name="ageRange">
-              <option value="">Prefer not to say</option>
-              <option value="under_18">Under 18</option>
-              <option value="18_34">18–34</option>
-              <option value="35_54">35–54</option>
-              <option value="55_plus">55+</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <div class="checkbox-row">
-              <input type="checkbox" id="nameUseApproved" name="nameUseApproved" />
-              <label for="nameUseApproved" style="margin:0; font-weight:500;">I give the team permission to use my first name in a presentation about this project.</label>
-            </div>
+          <legend>Have you seen any other small animals on or near the road in Licking County? <span class="optional-tag">Optional</span></legend>
+          <div class="radio-row">
+            <label><input type="radio" name="otherAnimals" value="yes" /> Yes</label>
+            <label><input type="radio" name="otherAnimals" value="no" /> No</label>
           </div>
         </fieldset>
 
-        <button type="submit" class="btn btn-primary" id="submit-btn">Submit Report</button>
+        <div id="other-animals-detail" class="hidden field" style="margin-bottom:0;">
+          <label for="otherAnimalsDescription">What animal(s) did you see?</label>
+          <input type="text" id="otherAnimalsDescription" name="otherAnimalsDescription" placeholder="e.g. raccoon, opossum, groundhog" />
+        </div>
+
+        <div class="step-actions">
+          <button type="button" class="btn btn-secondary" data-action="back">Back</button>
+          <button type="button" class="btn btn-primary" data-action="next-from-animals">Next</button>
+        </div>
       </div>
+
+      <!-- STEP: about you (final step before submit) -->
+      <div class="step-panel hidden" data-step="about">
+        <div class="step-progress">About You</div>
+        <p class="hint" style="margin-top:-4px;">Only our student team ever sees this. It's never shown publicly. <span class="optional-tag">Optional</span></p>
+
+        <div class="field">
+          <label for="firstName">First name</label>
+          <input type="text" id="firstName" name="firstName" />
+        </div>
+
+        <div class="field">
+          <label for="ageRange">Age range</label>
+          <select id="ageRange" name="ageRange">
+            <option value="">Prefer not to say</option>
+            <option value="under_18">Under 18</option>
+            <option value="18_34">18–34</option>
+            <option value="35_54">35–54</option>
+            <option value="55_plus">55+</option>
+          </select>
+        </div>
+
+        <div class="field" style="margin-bottom:0;">
+          <div class="checkbox-row">
+            <input type="checkbox" id="nameUseApproved" name="nameUseApproved" />
+            <label for="nameUseApproved" style="margin:0; font-weight:500;">I give the team permission to use my first name in a presentation about this project.</label>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button type="button" class="btn btn-secondary" data-action="back">Back</button>
+          <button type="submit" class="btn btn-primary" id="submit-btn">Submit Report</button>
+        </div>
+      </div>
+
+      <!-- STEP: dead end (no turtle, no other animals) -->
+      <div class="step-panel hidden" data-step="thankyou-no">
+        <div class="card" style="margin-bottom:0;">
+          <p><strong>Thank you for your time!</strong> If you spot a turtle — or any other animal activity — on the road in the future, we'd love to hear about it.</p>
+        </div>
+        <div class="step-actions" style="justify-content:flex-start; border-top:none; margin-top:16px; padding-top:0;">
+          <button type="button" class="btn btn-secondary" data-action="back">Back</button>
+        </div>
+      </div>
+
+      <!-- STEP: done (after successful submit) -->
+      <div class="step-panel hidden" data-step="done">
+        <div class="card" style="margin-bottom:0;">
+          <p><strong>Thank you!</strong> Your submission has been recorded and will be reviewed by our team before it's counted.</p>
+        </div>
+      </div>
+
     </form>
   </div>
 </section>
