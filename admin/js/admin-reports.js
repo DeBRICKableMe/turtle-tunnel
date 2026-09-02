@@ -7,9 +7,9 @@ import {
 const user = await requireAuth();
 wireLogout("logout-link");
 
-const HABITAT_LABELS = {
-  road: "Road", next_to_road: "Next to road", yard: "Yard",
-  pond: "Pond", creek: "Creek", other: "Other",
+const ROAD_POSITION_LABELS = {
+  crossing: "Crossing the road", shoulder: "On the shoulder / edge",
+  ditch: "In a ditch beside the road", median: "On the median",
 };
 const CONDITION_LABELS = {
   alive_moving: "Alive and moving", alive_injured: "Alive but injured",
@@ -55,7 +55,7 @@ async function loadReports(status) {
       <td>${fmtDate(r.submittedAt)}</td>
       <td><span class="pill pill-${r.status}">${r.status}</span></td>
       <td>${r.location || "—"}</td>
-      <td>${HABITAT_LABELS[r.habitat] || "—"}</td>
+      <td>${ROAD_POSITION_LABELS[r.roadPosition] || "—"}</td>
       <td>${CONDITION_LABELS[r.condition] || "—"}</td>
     `;
     tr.addEventListener("click", () => openDetail(d.id));
@@ -100,11 +100,11 @@ async function openDetail(id) {
         </select>
       </div>
       <div class="field">
-        <label>Habitat</label>
-        <select id="edit-habitat">
+        <label>Road Position</label>
+        <select id="edit-roadposition">
           <option value="">—</option>
-          ${Object.entries(HABITAT_LABELS).map(([k, v]) =>
-            `<option value="${k}" ${r.habitat === k ? "selected" : ""}>${v}</option>`).join("")}
+          ${Object.entries(ROAD_POSITION_LABELS).map(([k, v]) =>
+            `<option value="${k}" ${r.roadPosition === k ? "selected" : ""}>${v}</option>`).join("")}
         </select>
       </div>
 
@@ -165,19 +165,19 @@ async function saveCorrections(id, original) {
   const newLocation = document.getElementById("edit-location").value.trim() || null;
   const newDate = document.getElementById("edit-date").value || null;
   const newCondition = document.getElementById("edit-condition").value || null;
-  const newHabitat = document.getElementById("edit-habitat").value || null;
+  const newRoadPosition = document.getElementById("edit-roadposition").value || null;
 
   const changed =
     newLocation !== (original.location || null) ||
     newDate !== (original.observedDate || null) ||
     newCondition !== (original.condition || null) ||
-    newHabitat !== (original.habitat || null);
+    newRoadPosition !== (original.roadPosition || null);
 
   await updateDoc(doc(db, "reports", id), {
     location: newLocation,
     observedDate: newDate,
     condition: newCondition,
-    habitat: newHabitat,
+    roadPosition: newRoadPosition,
     edited: changed ? true : (original.edited || false),
   });
 

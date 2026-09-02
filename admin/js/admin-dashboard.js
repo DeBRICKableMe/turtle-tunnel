@@ -11,9 +11,9 @@ const CONDITION_LABELS = {
   alive_moving: "Alive and moving", alive_injured: "Alive but injured",
   dead: "Dead", unsure: "Unsure",
 };
-const HABITAT_LABELS = {
-  road: "Road", next_to_road: "Next to road", yard: "Yard",
-  pond: "Pond", creek: "Creek", other: "Other",
+const ROAD_POSITION_LABELS = {
+  crossing: "Crossing the road", shoulder: "On the shoulder / edge",
+  ditch: "In a ditch beside the road", median: "On the median",
 };
 
 async function countByStatus(status) {
@@ -59,7 +59,7 @@ async function loadRecent() {
     tr.innerHTML = `
       <td>${fmtDate(r.submittedAt)}</td>
       <td><span class="pill pill-${r.status}">${r.status}</span></td>
-      <td>${HABITAT_LABELS[r.habitat] || "—"}</td>
+      <td>${ROAD_POSITION_LABELS[r.roadPosition] || "—"}</td>
       <td>${CONDITION_LABELS[r.condition] || "—"}</td>
     `;
     tbody.appendChild(tr);
