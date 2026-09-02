@@ -247,6 +247,32 @@ legend {
 }
 .hidden { display: none !important; }
 
+/* ---------- Step wizard (report form) ---------- */
+.step-panel {
+  background: var(--color-bg-panel);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  margin-bottom: 20px;
+}
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--color-line);
+}
+.step-actions .btn { min-width: 100px; justify-content: center; }
+.step-progress {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-clay);
+  margin-bottom: 10px;
+}
+
 /* ---------- Status pills ---------- */
 .pill {
   display: inline-block;
