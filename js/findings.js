@@ -4,13 +4,11 @@ import {
   collection, query, where, getDocs, doc, getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const HABITAT_LABELS = {
-  road: "Road",
-  next_to_road: "Next to road",
-  yard: "Yard",
-  pond: "Pond",
-  creek: "Creek",
-  other: "Other",
+const ROAD_POSITION_LABELS = {
+  crossing: "Crossing the road",
+  shoulder: "On the shoulder / edge",
+  ditch: "In a ditch beside the road",
+  median: "On the median",
 };
 const CONDITION_LABELS = {
   alive_moving: "Alive and moving",
@@ -46,16 +44,16 @@ async function loadFindings() {
   const q = query(collection(db, "reports"), where("status", "==", "approved"));
   const snap = await getDocs(q);
 
-  const habitatCounts = {};
+  const roadPositionCounts = {};
   const conditionCounts = {};
-  let roadCount = 0;
+  let crossingCount = 0;
   let aliveCount = 0;
 
   snap.forEach((d) => {
     const data = d.data();
-    if (data.habitat) {
-      habitatCounts[data.habitat] = (habitatCounts[data.habitat] || 0) + 1;
-      if (data.habitat === "road" || data.habitat === "next_to_road") roadCount++;
+    if (data.roadPosition) {
+      roadPositionCounts[data.roadPosition] = (roadPositionCounts[data.roadPosition] || 0) + 1;
+      if (data.roadPosition === "crossing") crossingCount++;
     }
     if (data.condition) {
       conditionCounts[data.condition] = (conditionCounts[data.condition] || 0) + 1;
@@ -65,11 +63,11 @@ async function loadFindings() {
 
   const total = snap.size;
   document.getElementById("stat-total").textContent = total;
-  document.getElementById("stat-road").textContent = roadCount;
+  document.getElementById("stat-road").textContent = crossingCount;
   document.getElementById("stat-live").textContent = aliveCount;
   document.getElementById("stat-progress").textContent = `${Math.min(total, REPORT_GOAL)}/${REPORT_GOAL}`;
 
-  renderBreakdown(document.getElementById("habitat-breakdown"), habitatCounts, HABITAT_LABELS, total);
+  renderBreakdown(document.getElementById("habitat-breakdown"), roadPositionCounts, ROAD_POSITION_LABELS, total);
   renderBreakdown(document.getElementById("condition-breakdown"), conditionCounts, CONDITION_LABELS, total);
 }
 

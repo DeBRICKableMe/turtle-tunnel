@@ -1,7 +1,7 @@
 import { db } from "./firebase-app.js";
 import { EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY } from "./firebase-config.js";
 import {
-  collection, doc, serverTimestamp, writeBatch
+  collection, doc, addDoc, serverTimestamp, writeBatch
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // emailjs is loaded globally via the <script> tag in report.html
@@ -9,20 +9,42 @@ emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
 const form = document.getElementById("report-form");
 const restOfForm = document.getElementById("rest-of-form");
-const thankYouNo = document.getElementById("thank-you-no");
+const noBranch = document.getElementById("no-branch");
+const noAnimalsThankYou = document.getElementById("no-animals-thankyou");
+const otherAnimalsDetail = document.getElementById("other-animals-detail");
 const submitBtn = document.getElementById("submit-btn");
+const submitBtnOther = document.getElementById("submit-btn-other");
 const msgEl = document.getElementById("form-msg");
 
-// Gate logic: showing/hiding sections based on the first answer,
-// exactly matching the branching in the original Google Form.
+function resetBranches() {
+  restOfForm.classList.add("hidden");
+  noBranch.classList.add("hidden");
+  noAnimalsThankYou.classList.add("hidden");
+  otherAnimalsDetail.classList.add("hidden");
+}
+
+// Gate logic, matching the branching your team decided on:
+// - Turtle on the road? Yes -> full turtle report.
+// - No -> ask about other small animals on/near the road.
+//     - No -> simple thank-you, nothing to submit.
+//     - Yes -> free-text "what animal(s)" field, then Submit.
 form.addEventListener("change", (e) => {
   if (e.target.name === "seenTurtle") {
+    resetBranches();
     if (e.target.value === "yes") {
       restOfForm.classList.remove("hidden");
-      thankYouNo.classList.add("hidden");
     } else if (e.target.value === "no") {
-      restOfForm.classList.add("hidden");
-      thankYouNo.classList.remove("hidden");
+      noBranch.classList.remove("hidden");
+    }
+  }
+
+  if (e.target.name === "otherAnimals") {
+    if (e.target.value === "yes") {
+      otherAnimalsDetail.classList.remove("hidden");
+      noAnimalsThankYou.classList.add("hidden");
+    } else if (e.target.value === "no") {
+      otherAnimalsDetail.classList.add("hidden");
+      noAnimalsThankYou.classList.remove("hidden");
     }
   }
 });
@@ -31,15 +53,17 @@ function showMsg(text, kind) {
   msgEl.innerHTML = `<div class="msg msg-${kind}">${text}</div>`;
 }
 
+function sendNotification(templateParams) {
+  // Nice-to-have on top of the actual submission — never blocks
+  // or fails the visitor's submission if the email itself fails.
+  return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+    .catch((err) => console.warn("Report saved, but notification email failed to send:", err));
+}
+
+// --- Main turtle-on-the-road report ---
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const seenTurtle = form.seenTurtle.value;
-
-  // "No" branch never reaches Firestore — matches the original
-  // form, which just thanks the person and ends.
-  if (seenTurtle !== "yes") {
-    return;
-  }
+  if (form.seenTurtle.value !== "yes") return;
 
   submitBtn.disabled = true;
   submitBtn.textContent = "Submitting...";
@@ -47,10 +71,10 @@ form.addEventListener("submit", async (e) => {
   try {
     const publicFields = {
       seenTurtle: "yes",
+      roadPosition: form.roadPosition.value || null,
       location: form.location.value.trim() || null,
       observedDate: form.observedDate.value || null,
       condition: form.condition.value || null,
-      habitat: form.habitat.value || null,
       status: "pending",
       submittedAt: serverTimestamp(),
       reviewedAt: null,
@@ -68,7 +92,6 @@ form.addEventListener("submit", async (e) => {
     // an admin later corrects a field on the main document.
     const originalSubmission = { ...publicFields };
     delete originalSubmission.submittedAt; // serverTimestamp isn't snapshot-safe pre-write
-    originalSubmission.observedDateRaw = form.observedDate.value || null;
 
     const reportRef = doc(collection(db, "reports"));
     const privateRef = doc(collection(db, "reports", reportRef.id, "private"), "consent");
@@ -78,24 +101,15 @@ form.addEventListener("submit", async (e) => {
     batch.set(privateRef, privateFields);
     await batch.commit();
 
-    // Notify the team a report is waiting for review. This is a
-    // nice-to-have on top of the actual submission — if the email
-    // fails for any reason, the report is already safely saved,
-    // so we just log the error and move on rather than showing
-    // the visitor a failure.
-    try {
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        location: publicFields.location || "Not provided",
-        observed_date: publicFields.observedDate || "Not provided",
-        condition: publicFields.condition || "Not provided",
-        habitat: publicFields.habitat || "Not provided",
-      });
-    } catch (emailErr) {
-      console.warn("Report saved, but notification email failed to send:", emailErr);
-    }
+    await sendNotification({
+      location: publicFields.location || "Not provided",
+      observed_date: publicFields.observedDate || "Not provided",
+      condition: publicFields.condition || "Not provided",
+      habitat: publicFields.roadPosition || "Not provided",
+    });
 
     form.reset();
-    restOfForm.classList.add("hidden");
+    resetBranches();
     showMsg("Thank you! Your report has been submitted and will be reviewed by our team before it's counted.", "ok");
     window.scrollTo({ top: 0, behavior: "smooth" });
   } catch (err) {
@@ -104,5 +118,38 @@ form.addEventListener("submit", async (e) => {
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = "Submit Report";
+  }
+});
+
+// --- Other-animal sighting (from the "No" branch) ---
+submitBtnOther.addEventListener("click", async () => {
+  const description = document.getElementById("otherAnimalsDescription").value.trim();
+  if (!description) {
+    showMsg("Let us know what animal(s) you saw, or select \u201cNo\u201d above if you didn't see any.", "error");
+    return;
+  }
+
+  submitBtnOther.disabled = true;
+  submitBtnOther.textContent = "Submitting...";
+
+  try {
+    // Kept separate from the turtle `reports` collection since
+    // this isn't part of the turtle review/approval/100-count
+    // pipeline — just a log of other roadside animal activity.
+    await addDoc(collection(db, "other_animal_sightings"), {
+      description,
+      submittedAt: serverTimestamp(),
+    });
+
+    form.reset();
+    resetBranches();
+    showMsg("Thank you! We've logged that sighting.", "ok");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (err) {
+    console.error(err);
+    showMsg("Something went wrong submitting that. Please try again in a moment.", "error");
+  } finally {
+    submitBtnOther.disabled = false;
+    submitBtnOther.textContent = "Submit";
   }
 });
