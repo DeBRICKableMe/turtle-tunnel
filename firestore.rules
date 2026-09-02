@@ -44,5 +44,17 @@ service cloud.firestore {
       allow read: if true;
       allow write: if request.auth != null;
     }
+
+    // ---------------------------------------------------------
+    // other_animal_sightings/{docId}
+    // Logged from the "No" branch of the report form (saw other
+    // small animals on/near the road, but not a turtle). Not part
+    // of the turtle review/approval pipeline — public can create,
+    // only admins can read or manage it.
+    // ---------------------------------------------------------
+    match /other_animal_sightings/{docId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
   }
 }
