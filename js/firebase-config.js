@@ -10,12 +10,12 @@
 // not from hiding this config.
 // ============================================================
 export const firebaseConfig = {
-  apiKey: "REPLACE_ME",
-  authDomain: "REPLACE_ME.firebaseapp.com",
-  projectId: "REPLACE_ME",
-  storageBucket: "REPLACE_ME.appspot.com",
-  messagingSenderId: "REPLACE_ME",
-  appId: "REPLACE_ME"
+  apiKey: "AIzaSyCWO8XAtgqCaC004Cwmuld-fhPzDHm_80I",
+  authDomain: "turtle-tunnel.firebaseapp.com",
+  projectId: "turtle-tunnel",
+  storageBucket: "turtle-tunnel.firebasestorage.app",
+  messagingSenderId: "646619264779",
+  appId: "1:646619264779:web:587b71308b676b960f940e"
 };
 
 // Shared constant so the report goal is defined in one place.
